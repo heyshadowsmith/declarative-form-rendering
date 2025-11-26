@@ -200,9 +200,9 @@
             overflow: hidden;
         }
 
-        .split-view {
+        .dfr-showcase {
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: 1fr;
         }
 
         .code-pane {
@@ -210,29 +210,13 @@
             font-family: "Fira Code", monospace;
             font-size: 0.75rem;
             line-height: 1.5;
-        }
-
-        .code-pane.old {
-            background: rgba(255, 255, 255, 0.02);
-            color: #6b7280;
-            border-right: 1px solid var(--border);
-        }
-
-        .code-pane.new {
             background: rgba(59, 130, 246, 0.05);
             color: #e5e7eb;
-            position: relative;
+            border-bottom: 1px solid var(--border);
         }
 
-        .code-pane.new::before {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 2px;
-            height: 100%;
-            background: var(--primary);
-            box-shadow: 0 0 10px var(--primary);
+        .code-pane:last-child {
+            border-bottom: none;
         }
 
         .pane-label {
@@ -476,7 +460,7 @@
             font-size: 3rem;
             font-weight: 800;
             margin-bottom: 1rem;
-            background: linear-gradient(to right, #fff, #a5f3fc);
+            background: linear-gradient(to right, #fff, #9ca3af);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
@@ -537,15 +521,6 @@
 
             .hero-buttons {
                 justify-content: center;
-            }
-
-            .split-view {
-                grid-template-columns: 1fr;
-            }
-
-            .code-pane.old {
-                border-right: none;
-                border-bottom: 1px solid var(--border);
             }
 
             .steps-container::before {
@@ -694,7 +669,6 @@
                     <span>Declarative Form Rendering</span>
                 </div>
                 <div class="nav-links">
-                    <a href="https://shadowsmith.com" target="_blank">A Shadow Smith Project</a>
                     <a href="https://github.com/heyshadowsmith/declarative-form-rendering" target="_blank">View on
                         GitHub</a>
                 </div>
@@ -708,46 +682,45 @@
                 <div class="hero-content">
                     <div class="hero-text">
                         <h1>
-                            Build Complex Forms Without the Boilerplate.
+                            Make Complex Forms Simple.
                         </h1>
                         <p>
-                            A headless web component library for building
-                            dynamic forms through pure schema configuration.
-                            Eliminate repetitive UI code and gain full
-                            styling control.
+                            Declarative Form Rendering (DFR) is a set of headless web components and question JSON
+                            schemas for building and managing complex, dynamic forms in a declarative way.
                         </p>
                     </div>
                     <div class="hero-visual">
-                        <div class="split-view">
-                            <div class="code-pane old">
-                                <span class="pane-label">The Old Way (Painful)</span>
-                                &lt;label for="email"&gt;Email
-                                *&lt;/label&gt;<br />
-                                &lt;input type="email" id="email" required
-                                onchange="validate()"&gt;<br />
-                                &lt;span class="error-msg"
-                                style="display:none"&gt;Invalid
-                                email&lt;/span&gt;<br />
-                                &lt;script&gt;<br />
-                                &nbsp;&nbsp;// 50 lines of validation
-                                logic...<br />
-                                &lt;/script&gt;
-                            </div>
-                            <div class="code-pane new">
-                                <span class="pane-label">The DFR Way (Declarative)</span>
-                                <span class="token-comment">// JSON Schema</span><br />
-                                email: {<br />
-                                &nbsp;&nbsp;<span class="token-key">label</span>: <span
-                                    class="token-string">"Email"</span>,<br />
+                        <div class="dfr-showcase">
+                            <div class="code-pane">
+                                <span class="token-comment">// Schema</span><br />
+                                driverAge: {<br />
+                                &nbsp;&nbsp;<span class="token-key">label</span>:
+                                <span class="token-string">"Driver's Age"</span>,<br />
+                                &nbsp;&nbsp;<span class="token-key">placeholder</span>:
+                                <span class="token-string">"25"</span>,<br />
+                                &nbsp;&nbsp;<span class="token-key">description</span>:
+                                <span class="token-string">"Must be 18+"</span>,<br />
                                 &nbsp;&nbsp;<span class="token-key">required</span>: <span
                                     class="token-bool">true</span>,<br />
-                                &nbsp;&nbsp;<span class="token-key">pattern</span>:
-                                <span class="token-string">"^[^\\s@]+..."</span><br />
-                                }<br /><br />
-                                <span class="token-comment">// HTML</span><br />
-                                &lt;dfr-text-question<br />
-                                &nbsp;&nbsp;question=<span class="token-string">"formSchema.email"</span>&gt;<br />
-                                &lt;/dfr-text-question&gt;
+                                &nbsp;&nbsp;<span class="token-key">disabled</span>: <span
+                                    class="token-bool">false</span>,<br />
+                                &nbsp;&nbsp;<span class="token-key">min</span>:
+                                <span class="token-bool">18</span>,<br />
+                                &nbsp;&nbsp;<span class="token-key">max</span>:
+                                <span class="token-bool">100</span><br />
+                                }
+                                <br /><br />
+                                <span class="token-comment">// Rendering</span><br />
+                                &lt;dfr-number-question <span class="token-key">question</span>=<span
+                                    class="token-string">"driverAge"</span>&gt;<br />
+                                &lt;/dfr-number-question&gt;
+                                <br /><br />
+                                <span class="token-comment">// Reactivity</span><br />
+                                <span class="token-key">if</span> (driverAge.value &lt; <span
+                                    class="token-bool">25</span>) {<br />
+                                &nbsp;&nbsp;driverAge.description = <span class="token-string">"Young driver
+                                    fee applies"</span><br />
+                                }
                             </div>
                         </div>
                     </div>
@@ -758,7 +731,7 @@
         <section class="how-it-works">
             <div class="container">
                 <div class="section-header">
-                    <h2>How It Works</h2>
+                    <h2>How DFR Works</h2>
                 </div>
                 <div class="steps-container">
                     <div class="step">
@@ -766,20 +739,41 @@
                         <div class="step-content">
                             <h3>Define Your Form Schema</h3>
                             <p>
-                                Create a form schema object defining the
-                                configuration for each question.
+                                Create a form schema object defining your questions using Declarative Question Schemas.
                             </p>
                             <div class="code-block">
                                 {<br />
-                                &nbsp;&nbsp;effectiveDate: {<br />
-                                &nbsp;&nbsp;&nbsp;&nbsp;<span class="token-key">label</span>:
-                                <span class="token-string">"Effective Date"</span>,<br />
-                                &nbsp;&nbsp;&nbsp;&nbsp;<span class="token-key">required</span>: <span
+                                &nbsp;&nbsp;formSchema: {<br />
+                                &nbsp;&nbsp;&nbsp;&nbsp;driverAge: {<br />
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="token-key">label</span>:
+                                <span class="token-string">"Driver's Age"</span>,<br />
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="token-key">placeholder</span>:
+                                <span class="token-string">"25"</span>,<br />
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="token-key">description</span>:
+                                <span class="token-string">"Must be 18+"</span>,<br />
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="token-key">required</span>: <span
                                     class="token-bool">true</span>,<br />
-                                &nbsp;&nbsp;&nbsp;&nbsp;<span class="token-key">minDate</span>:
-                                <span class="token-string">"2020-01-01"</span>,<br />
-                                &nbsp;&nbsp;&nbsp;&nbsp;<span class="token-key">maxDate</span>:
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="token-key">disabled</span>: <span
+                                    class="token-bool">false</span>,<br />
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="token-key">min</span>:
+                                <span class="token-bool">18</span>,<br />
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="token-key">max</span>:
+                                <span class="token-bool">100</span><br />
+                                &nbsp;&nbsp;&nbsp;&nbsp;},<br />
+                                &nbsp;&nbsp;&nbsp;&nbsp;rentalDate: {<br />
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="token-key">label</span>:
+                                <span class="token-string">"Pick-up Date"</span>,<br />
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="token-key">description</span>:
+                                <span class="token-string">"Select a date"</span>,<br />
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="token-key">required</span>: <span
+                                    class="token-bool">true</span>,<br />
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="token-key">disabled</span>: <span
+                                    class="token-bool">false</span>,<br />
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="token-key">minDate</span>:
+                                <span class="token-string">"2024-01-01"</span>,<br />
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="token-key">maxDate</span>:
                                 <span class="token-string">"2025-12-31"</span><br />
+                                &nbsp;&nbsp;&nbsp;&nbsp;}<br />
                                 &nbsp;&nbsp;}<br />
                                 }
                             </div>
@@ -789,15 +783,23 @@
                     <div class="step">
                         <div class="step-number">2</div>
                         <div class="step-content">
-                            <h3>Add Components to HTML</h3>
+                            <h3>Add Web Components to HTML</h3>
                             <p>
-                                Use a question component and bind it to your
-                                question schema.
+                                Use the question components that match each of your question types and bind them to your
+                                question schemas.
                             </p>
                             <div class="code-block">
+                                &lt;dfr-number-question<br />
+                                &nbsp;&nbsp;<span class="token-key">id</span>=<span
+                                    class="token-string">"driverAge"</span><br />
+                                &nbsp;&nbsp;<span class="token-key">question</span>=<span
+                                    class="token-string">"formSchema.driverAge"</span>&gt;<br />
+                                &lt;/dfr-number-question&gt;<br /><br />
                                 &lt;dfr-date-question<br />
-                                &nbsp;&nbsp;id=<span class="token-string">"effectiveDate"</span><br />
-                                &nbsp;&nbsp;question=<span class="token-string">"effectiveDate"</span>&gt;<br />
+                                &nbsp;&nbsp;<span class="token-key">id</span>=<span
+                                    class="token-string">"rentalDate"</span><br />
+                                &nbsp;&nbsp;<span class="token-key">question</span>=<span
+                                    class="token-string">"formSchema.rentalDate"</span>&gt;<br />
                                 &lt;/dfr-date-question&gt;
                             </div>
                         </div>
@@ -812,14 +814,40 @@
                             </p>
                             <div class="code-block">
                                 dfr-date-question::part(input) {<br />
-                                &nbsp;&nbsp;border: 2px solid #00f2ff;
-                                <span class="token-comment">/* Neon blue */</span><br />
-                                &nbsp;&nbsp;border-radius: 6px;<br />
-                                &nbsp;&nbsp;padding: 0.75rem;<br />
+                                &nbsp;&nbsp;<span class="token-key">border</span>: <span class="token-string">2px solid
+                                    #00f2ff</span>;<br />
+                                &nbsp;&nbsp;<span class="token-key">border-radius</span>: <span
+                                    class="token-string">6px</span>;<br />
+                                &nbsp;&nbsp;<span class="token-key">padding</span>: <span
+                                    class="token-string">0.75rem</span>;<br />
                                 }<br /><br />
                                 dfr-date-question::part(label) {<br />
-                                &nbsp;&nbsp;color: #ffffff;<br />
-                                &nbsp;&nbsp;font-weight: 600;<br />
+                                &nbsp;&nbsp;<span class="token-key">color</span>: <span
+                                    class="token-string">#ffffff</span>;<br />
+                                &nbsp;&nbsp;<span class="token-key">font-weight</span>: <span
+                                    class="token-string">600</span>;<br />
+                                }
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-number">4</div>
+                        <div class="step-content">
+                            <h3>Update Your Form Schema</h3>
+                            <p>
+                                Simply update your schema object based on business logic. The form automatically
+                                rerenders to reflect changes.
+                            </p>
+                            <div class="code-block">
+                                <span class="token-comment">// Add fee warning for young drivers</span><br />
+                                <span class="token-key">if</span> (driverAge.value &lt; <span
+                                    class="token-bool">25</span>) {<br />
+                                &nbsp;&nbsp;formSchema.rentalDate.description = <span class="token-string">"Young driver
+                                    fee applies"</span>;<br />
+                                } <span class="token-key">else</span> {<br />
+                                &nbsp;&nbsp;formSchema.rentalDate.description = <span
+                                    class="token-bool">null</span>;<br />
                                 }
                             </div>
                         </div>
@@ -869,13 +897,15 @@
                                 style="border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center;">
                                 Component Usage
                                 <a href="/storybook/?path=/story/molecules-text-question--default" target="_blank"
-                                    style="font-size: 0.8em; color: var(--primary); text-decoration: none;">View in
-                                    Storybook &rarr;</a>
+                                    style="font-size: 0.8em; color: var(--primary); text-decoration: none;">Open Web
+                                    Component in Storybook &rarr;</a>
                             </div>
                             <div class="code-pane">
                                 &lt;dfr-text-question<br />
-                                &nbsp;&nbsp;id=<span class="token-string">"firstName"</span><br />
-                                &nbsp;&nbsp;question=<span class="token-string">"formSchema.firstName"</span>&gt;<br />
+                                &nbsp;&nbsp;<span class="token-key">id</span>=<span
+                                    class="token-string">"firstName"</span><br />
+                                &nbsp;&nbsp;<span class="token-key">question</span>=<span
+                                    class="token-string">"formSchema.firstName"</span>&gt;<br />
                                 &lt;/dfr-text-question&gt;
                             </div>
                         </div>
@@ -938,13 +968,14 @@
                                 style="border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center;">
                                 Component Usage
                                 <a href="/storybook/?path=/story/molecules-date-question--default" target="_blank"
-                                    style="font-size: 0.8em; color: var(--primary); text-decoration: none;">View in
-                                    Storybook &rarr;</a>
+                                    style="font-size: 0.8em; color: var(--primary); text-decoration: none;">Open Web
+                                    Component in Storybook &rarr;</a>
                             </div>
                             <div class="code-pane">
                                 &lt;dfr-date-question<br />
-                                &nbsp;&nbsp;id=<span class="token-string">"effectiveDate"</span><br />
-                                &nbsp;&nbsp;question=<span
+                                &nbsp;&nbsp;<span class="token-key">id</span>=<span
+                                    class="token-string">"effectiveDate"</span><br />
+                                &nbsp;&nbsp;<span class="token-key">question</span>=<span
                                     class="token-string">"formSchema.effectiveDate"</span>&gt;<br />
                                 &lt;/dfr-date-question&gt;
                             </div>
@@ -1012,13 +1043,14 @@
                                 style="border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center;">
                                 Component Usage
                                 <a href="/storybook/?path=/story/molecules-number-question--default" target="_blank"
-                                    style="font-size: 0.8em; color: var(--primary); text-decoration: none;">View in
-                                    Storybook &rarr;</a>
+                                    style="font-size: 0.8em; color: var(--primary); text-decoration: none;">Open Web
+                                    Component in Storybook &rarr;</a>
                             </div>
                             <div class="code-pane">
                                 &lt;dfr-number-question<br />
-                                &nbsp;&nbsp;id=<span class="token-string">"squareFootage"</span><br />
-                                &nbsp;&nbsp;question=<span
+                                &nbsp;&nbsp;<span class="token-key">id</span>=<span
+                                    class="token-string">"squareFootage"</span><br />
+                                &nbsp;&nbsp;<span class="token-key">question</span>=<span
                                     class="token-string">"formSchema.squareFootage"</span>&gt;<br />
                                 &lt;/dfr-number-question&gt;
                             </div>
@@ -1096,13 +1128,15 @@
                                 style="border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center;">
                                 Component Usage
                                 <a href="/storybook/?path=/story/molecules-select-question--default" target="_blank"
-                                    style="font-size: 0.8em; color: var(--primary); text-decoration: none;">View in
-                                    Storybook &rarr;</a>
+                                    style="font-size: 0.8em; color: var(--primary); text-decoration: none;">Open Web
+                                    Component in Storybook &rarr;</a>
                             </div>
                             <div class="code-pane">
                                 &lt;dfr-select-question<br />
-                                &nbsp;&nbsp;id=<span class="token-string">"status"</span><br />
-                                &nbsp;&nbsp;question=<span class="token-string">"formSchema.status"</span>&gt;<br />
+                                &nbsp;&nbsp;<span class="token-key">id</span>=<span
+                                    class="token-string">"status"</span><br />
+                                &nbsp;&nbsp;<span class="token-key">question</span>=<span
+                                    class="token-string">"formSchema.status"</span>&gt;<br />
                                 &lt;/dfr-select-question&gt;
                             </div>
                         </div>
@@ -1173,13 +1207,15 @@
                                 Component Usage
                                 <a href="/storybook/?path=/story/molecules-number-select-question--default"
                                     target="_blank"
-                                    style="font-size: 0.8em; color: var(--primary); text-decoration: none;">View in
-                                    Storybook &rarr;</a>
+                                    style="font-size: 0.8em; color: var(--primary); text-decoration: none;">Open Web
+                                    Component in Storybook &rarr;</a>
                             </div>
                             <div class="code-pane">
                                 &lt;dfr-number-select-question<br />
-                                &nbsp;&nbsp;id=<span class="token-string">"rating"</span><br />
-                                &nbsp;&nbsp;question=<span class="token-string">"formSchema.rating"</span>&gt;<br />
+                                &nbsp;&nbsp;<span class="token-key">id</span>=<span
+                                    class="token-string">"rating"</span><br />
+                                &nbsp;&nbsp;<span class="token-key">question</span>=<span
+                                    class="token-string">"formSchema.rating"</span>&gt;<br />
                                 &lt;/dfr-number-select-question&gt;
                             </div>
                         </div>
@@ -1252,9 +1288,12 @@
     <footer>
         <div class="container">
             <p>
-                &copy; 2024 Declarative Form Rendering. Released under the
+                &copy; <span id="copyright-year"></span> Declarative Form Rendering. Released under the
                 MIT License.
             </p>
+            <script>
+                document.getElementById('copyright-year').textContent = new Date().getFullYear();
+            </script>
         </div>
     </footer>
 </body>
