@@ -6,16 +6,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Declarative Form Rendering</title>
     <script type="module" src="./src/all-questions.ts"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fira+Code&display=swap"
+        rel="stylesheet" />
     <style>
         :root {
-            --primary: #6366f1;
-            --primary-dark: #4f46e5;
-            --secondary: #ec4899;
-            --text: #1f2937;
-            --text-light: #6b7280;
-            --bg: #f9fafb;
-            --white: #ffffff;
-            --code-bg: #1e1e1e;
+            --bg-dark: #0f1115;
+            --bg-card: #161b22;
+            --text-main: #ffffff;
+            --text-muted: #9ca3af;
+            --primary: #3b82f6;
+            --primary-glow: rgba(59, 130, 246, 0.5);
+            --accent: #8b5cf6;
+            --gradient-main: linear-gradient(135deg,
+                    var(--primary),
+                    var(--accent));
+            --border: #374151;
         }
 
         * {
@@ -25,14 +32,16 @@
         }
 
         body {
-            font-family:
-                "Inter",
-                system-ui,
-                -apple-system,
-                sans-serif;
-            color: var(--text);
-            background: var(--bg);
-            line-height: 1.5;
+            font-family: "Inter", system-ui, sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
         }
 
         .container {
@@ -43,12 +52,13 @@
 
         /* Header */
         header {
-            background: var(--white);
-            border-bottom: 1px solid #e5e7eb;
-            padding: 1rem 0;
             position: sticky;
             top: 0;
-            z-index: 10;
+            z-index: 50;
+            background: rgba(15, 17, 21, 0.8);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 1rem 0;
         }
 
         nav {
@@ -58,215 +68,619 @@
         }
 
         .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-weight: 700;
+            font-size: 1.25rem;
+        }
+
+        .logo-icon {
+            color: var(--primary);
+            font-family: "Fira Code", monospace;
             font-weight: 800;
-            font-size: 1.5rem;
-            background: linear-gradient(to right, var(--primary), var(--secondary));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 10px var(--primary-glow);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
         }
 
         .nav-links a {
-            color: var(--text-light);
-            text-decoration: none;
-            margin-left: 2rem;
-            font-weight: 500;
+            color: var(--text-muted);
+            font-size: 0.9rem;
             transition: color 0.2s;
         }
 
         .nav-links a:hover {
-            color: var(--primary);
+            color: var(--text-main);
+        }
+
+        .btn-cta {
+            background: var(--gradient-main);
+            color: white;
+            padding: 0.5rem 1.25rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: opacity 0.2s;
+        }
+
+        .btn-cta:hover {
+            opacity: 0.9;
         }
 
         /* Hero */
         .hero {
             padding: 6rem 0;
-            text-align: center;
+            position: relative;
+            overflow: hidden;
+            border-bottom: 1px solid var(--border);
         }
 
-        .hero h1 {
+        .hero::before {
+            content: "";
+            position: absolute;
+            top: -50%;
+            left: -20%;
+            width: 80%;
+            height: 200%;
+            background: radial-gradient(circle,
+                    rgba(59, 130, 246, 0.1) 0%,
+                    transparent 70%);
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .hero-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        .hero-text h1 {
             font-size: 3.5rem;
+            line-height: 1.1;
             font-weight: 800;
             margin-bottom: 1.5rem;
-            line-height: 1.1;
+            background: linear-gradient(to right, #fff, #9ca3af);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
-        .hero p {
-            font-size: 1.25rem;
-            color: var(--text-light);
-            max-width: 600px;
-            margin: 0 auto 2.5rem;
+        .hero-text p {
+            color: var(--text-muted);
+            font-size: 1.125rem;
+            margin-bottom: 2.5rem;
+            max-width: 500px;
         }
 
-        .btn {
-            display: inline-block;
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn-primary {
             background: var(--primary);
-            color: var(--white);
+            color: white;
             padding: 0.75rem 1.5rem;
             border-radius: 0.5rem;
-            text-decoration: none;
             font-weight: 600;
-            transition: background 0.2s;
+            box-shadow: 0 0 20px var(--primary-glow);
+            transition: transform 0.2s;
         }
 
-        .btn:hover {
-            background: var(--primary-dark);
+        .btn-primary:hover {
+            transform: translateY(-2px);
         }
 
         .btn-secondary {
-            background: var(--white);
-            color: var(--text);
-            border: 1px solid #e5e7eb;
-            margin-left: 1rem;
+            background: transparent;
+            color: var(--text-main);
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            border: 1px solid var(--primary);
+            transition: background 0.2s;
         }
 
         .btn-secondary:hover {
-            background: #f3f4f6;
+            background: rgba(59, 130, 246, 0.1);
         }
 
-        /* Features */
-        .features {
-            padding: 4rem 0;
-            background: var(--white);
+        .hero-visual {
+            position: relative;
+            background: #000;
+            border-radius: 1rem;
+            border: 1px solid var(--border);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            overflow: hidden;
         }
 
-        .features-grid {
+        .split-view {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+        }
+
+        .code-pane {
+            padding: 1.5rem;
+            font-family: "Fira Code", monospace;
+            font-size: 0.75rem;
+            line-height: 1.5;
+        }
+
+        .code-pane.old {
+            background: rgba(255, 255, 255, 0.02);
+            color: #6b7280;
+            border-right: 1px solid var(--border);
+        }
+
+        .code-pane.new {
+            background: rgba(59, 130, 246, 0.05);
+            color: #e5e7eb;
+            position: relative;
+        }
+
+        .code-pane.new::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 2px;
+            height: 100%;
+            background: var(--primary);
+            box-shadow: 0 0 10px var(--primary);
+        }
+
+        .pane-label {
+            display: block;
+            margin-bottom: 1rem;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            opacity: 0.7;
+        }
+
+        /* Problem Section */
+        .problem-section {
+            padding: 6rem 0;
+            background: #111;
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section-header h2 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .grid-3 {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 2rem;
         }
 
+        .problem-card {
+            padding: 2rem;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 1rem;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .icon-box {
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            opacity: 0.8;
+        }
+
+        .problem-card h3 {
+            font-size: 1.25rem;
+            margin-bottom: 1rem;
+            color: #e5e7eb;
+        }
+
+        .problem-card p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        /* Solution Section */
+        .solution-section {
+            padding: 6rem 0;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+
         .feature-card {
             padding: 2rem;
+            background: var(--bg-card);
             border-radius: 1rem;
-            background: var(--bg);
-            border: 1px solid #e5e7eb;
+            border: 1px solid var(--border);
+            transition:
+                transform 0.2s,
+                border-color 0.2s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary);
         }
 
         .feature-icon {
-            font-size: 2rem;
-            margin-bottom: 1rem;
-        }
-
-        .feature-card h3 {
-            margin-bottom: 0.5rem;
-            font-size: 1.25rem;
-        }
-
-        .feature-card p {
-            color: var(--text-light);
-        }
-
-        /* Demo Section */
-        .demo-section {
-            padding: 4rem 0;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 4rem;
-            align-items: start;
-        }
-
-        .demo-form {
-            background: var(--white);
-            padding: 2rem;
-            border-radius: 1rem;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-        }
-
-        .demo-code {
-            background: var(--code-bg);
-            color: #e5e7eb;
-            padding: 1.5rem;
-            border-radius: 1rem;
-            overflow-x: auto;
-            font-family: "Fira Code", monospace;
-            font-size: 0.875rem;
-        }
-
-        /* Component Styling (Headless Demo) */
-        dfr-text-question,
-        dfr-number-question,
-        dfr-select-question,
-        dfr-date-question {
-            display: block;
+            width: 3rem;
+            height: 3rem;
+            background: rgba(59, 130, 246, 0.1);
+            border-radius: 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: var(--primary);
             margin-bottom: 1.5rem;
         }
 
-        dfr-text-question::part(label),
-        dfr-number-question::part(label),
-        dfr-select-question::part(label),
-        dfr-date-question::part(label) {
-            display: block;
+        .feature-card h3 {
+            font-size: 1.25rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .feature-card p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            margin-bottom: 1rem;
+        }
+
+        .feature-detail {
+            font-size: 0.85rem;
+            color: #e5e7eb;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* How It Works */
+        .how-it-works {
+            padding: 6rem 0;
+            background: #111;
+        }
+
+        .steps-container {
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .steps-container::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 2rem;
+            width: 2px;
+            height: 100%;
+            background: linear-gradient(to bottom,
+                    var(--primary),
+                    transparent);
+        }
+
+        .step {
+            display: flex;
+            gap: 3rem;
+            margin-bottom: 4rem;
+            position: relative;
+        }
+
+        .step-number {
+            width: 4rem;
+            height: 4rem;
+            background: var(--bg-dark);
+            border: 2px solid var(--primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.25rem;
+            color: var(--primary);
+            flex-shrink: 0;
+            z-index: 1;
+            box-shadow: 0 0 20px rgba(59, 130, 246, 0.2);
+        }
+
+        .step-content {
+            flex: 1;
+            padding-top: 0.5rem;
+        }
+
+        .step-content h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .step-content p {
+            color: var(--text-muted);
+            margin-bottom: 1.5rem;
+        }
+
+        .code-block {
+            background: #000;
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            border: 1px solid var(--border);
+            font-family: "Fira Code", monospace;
+            font-size: 0.85rem;
+            color: #e5e7eb;
+            overflow-x: auto;
+        }
+
+        .token-key {
+            color: #93c5fd;
+        }
+
+        .token-string {
+            color: #a5f3fc;
+        }
+
+        .token-bool {
+            color: #fca5a5;
+        }
+
+        .token-comment {
+            color: #6b7280;
+        }
+
+        /* Use Cases */
+        .use-cases {
+            padding: 3rem 0;
+            border-top: 1px solid var(--border);
+            background: var(--bg-card);
+        }
+
+        .use-cases-flex {
+            display: flex;
+            justify-content: center;
+            gap: 4rem;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .use-case-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            color: var(--text-muted);
             font-weight: 500;
-            margin-bottom: 0.5rem;
-            color: var(--text);
         }
 
-        dfr-text-question::part(input),
-        dfr-number-question::part(input),
-        dfr-select-question::part(input),
-        dfr-date-question::part(input) {
-            width: 100%;
-            padding: 0.75rem;
-            border: 1px solid #d1d5db;
-            border-radius: 0.5rem;
-            font-size: 1rem;
-            transition: border-color 0.2s;
+        /* Footer CTA */
+        .footer-cta {
+            padding: 6rem 0;
+            text-align: center;
+            background: radial-gradient(circle,
+                    rgba(59, 130, 246, 0.1) 0%,
+                    transparent 70%);
         }
 
-        dfr-text-question::part(input):focus,
-        dfr-number-question::part(input):focus,
-        dfr-select-question::part(input):focus,
-        dfr-date-question::part(input):focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+        .footer-cta h2 {
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            background: linear-gradient(to right, #fff, #a5f3fc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
-        dfr-text-question::part(description),
-        dfr-number-question::part(description),
-        dfr-select-question::part(description),
-        dfr-date-question::part(description) {
-            font-size: 0.875rem;
-            color: var(--text-light);
-            margin-bottom: 0.25rem;
-            display: block;
+        .footer-cta p {
+            color: var(--text-muted);
+            font-size: 1.25rem;
+            margin-bottom: 3rem;
         }
 
-        dfr-text-question::part(error),
-        dfr-number-question::part(error),
-        dfr-select-question::part(error),
-        dfr-date-question::part(error) {
-            color: #ef4444;
-            font-size: 0.875rem;
-            margin-top: 0.25rem;
-            display: block;
+        .install-cmd {
+            background: #000;
+            display: inline-flex;
+            align-items: center;
+            padding: 1rem 2rem;
+            border-radius: 0.75rem;
+            font-family: "Fira Code", monospace;
+            border: 1px solid var(--border);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
         }
 
-        button[type="submit"] {
-            width: 100%;
-            background: var(--primary);
+        .install-cmd span {
+            color: var(--primary);
+            margin-right: 1rem;
+        }
+
+        .footer-links {
+            margin-top: 2rem;
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+        }
+
+        .footer-links a {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .footer-links a:hover {
             color: white;
-            padding: 0.75rem;
-            border: none;
-            border-radius: 0.5rem;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background 0.2s;
-        }
-
-        button[type="submit"]:hover {
-            background: var(--primary-dark);
+            text-decoration: underline;
         }
 
         /* Footer */
         footer {
-            background: var(--white);
-            border-top: 1px solid #e5e7eb;
             padding: 2rem 0;
             text-align: center;
-            color: var(--text-light);
-            margin-top: 4rem;
+            border-top: 1px solid var(--border);
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
+        @media (max-width: 768px) {
+            .hero-content {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+
+            .hero-buttons {
+                justify-content: center;
+            }
+
+            .split-view {
+                grid-template-columns: 1fr;
+            }
+
+            .code-pane.old {
+                border-right: none;
+                border-bottom: 1px solid var(--border);
+            }
+
+            .steps-container::before {
+                left: 1.5rem;
+            }
+
+            .step {
+                gap: 1.5rem;
+            }
+
+            .step-number {
+                width: 3rem;
+                height: 3rem;
+                font-size: 1rem;
+            }
+        }
+
+        /* Schema Showcase */
+        .schema-showcase {
+            padding: 6rem 0;
+            background: var(--bg-card);
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .tabs {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 3rem;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-family: inherit;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .tab-btn:hover {
+            border-color: var(--primary);
+            color: var(--text-main);
+        }
+
+        .tab-btn.active {
+            background: rgba(59, 130, 246, 0.1);
+            border-color: var(--primary);
+            color: var(--primary);
+            box-shadow: 0 0 15px rgba(59, 130, 246, 0.1);
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .schema-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        .schema-details {
+            background: #000;
+            border-radius: 1rem;
+            border: 1px solid var(--border);
+            overflow: hidden;
+        }
+
+        .schema-header {
+            padding: 1rem 1.5rem;
+            background: rgba(255, 255, 255, 0.03);
+            border-bottom: 1px solid var(--border);
+            font-weight: 600;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .req-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+
+        .req-table th,
+        .req-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .req-table th {
+            color: var(--text-muted);
+            font-weight: 600;
+            width: 30%;
+        }
+
+        .req-table td {
+            color: #e5e7eb;
+        }
+
+        .req-table tr:last-child td,
+        .req-table tr:last-child th {
+            border-bottom: none;
+        }
+
+        @media (max-width: 900px) {
+            .schema-grid {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
@@ -275,11 +689,12 @@
     <header>
         <div class="container">
             <nav>
-                <div class="logo">DFR</div>
+                <div class="logo">
+                    <span class="logo-icon">{DFR}</span>
+                    <span>Declarative Form Rendering</span>
+                </div>
                 <div class="nav-links">
-                    <a href="#features">Features</a>
-                    <a href="#demo">Demo</a>
-                    <a href="https://github.com/heyshadowsmith/declarative-form-rendering" target="_blank">GitHub</a>
+                    <a href="https://shadowsmith.com" target="_blank">A Shadow Smith Project</a>
                 </div>
             </nav>
         </div>
@@ -288,106 +703,518 @@
     <main>
         <section class="hero">
             <div class="container">
-                <h1>Declarative Form Rendering</h1>
-                <p>
-                    Build complex, type-safe forms with standard Web Components.
-                    Headless, lightweight, and framework-agnostic.
-                </p>
-                <div>
-                    <a href="#demo" class="btn">Try the Demo</a>
-                    <a href="https://github.com/heyshadowsmith/declarative-form-rendering"
-                        class="btn btn-secondary">View on GitHub</a>
+                <div class="hero-content">
+                    <div class="hero-text">
+                        <h1>
+                            Build Complex Forms Without the Boilerplate.
+                        </h1>
+                        <p>
+                            A headless web component library for building
+                            dynamic forms through pure schema configuration.
+                            Eliminate repetitive UI code and gain full
+                            styling control.
+                        </p>
+                    </div>
+                    <div class="hero-visual">
+                        <div class="split-view">
+                            <div class="code-pane old">
+                                <span class="pane-label">The Old Way (Painful)</span>
+                                &lt;label for="email"&gt;Email
+                                *&lt;/label&gt;<br />
+                                &lt;input type="email" id="email" required
+                                onchange="validate()"&gt;<br />
+                                &lt;span class="error-msg"
+                                style="display:none"&gt;Invalid
+                                email&lt;/span&gt;<br />
+                                &lt;script&gt;<br />
+                                &nbsp;&nbsp;// 50 lines of validation
+                                logic...<br />
+                                &lt;/script&gt;
+                            </div>
+                            <div class="code-pane new">
+                                <span class="pane-label">The DFR Way (Declarative)</span>
+                                <span class="token-comment">// JSON Schema</span><br />
+                                email: {<br />
+                                &nbsp;&nbsp;<span class="token-key">label</span>: <span
+                                    class="token-string">"Email"</span>,<br />
+                                &nbsp;&nbsp;<span class="token-key">required</span>: <span
+                                    class="token-bool">true</span>,<br />
+                                &nbsp;&nbsp;<span class="token-key">pattern</span>:
+                                <span class="token-string">"^[^\\s@]+..."</span><br />
+                                }<br /><br />
+                                <span class="token-comment">// HTML</span><br />
+                                &lt;dfr-text-question<br />
+                                &nbsp;&nbsp;question=<span class="token-string">"formSchema.email"</span>&gt;<br />
+                                &lt;/dfr-text-question&gt;
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
 
-        <section id="features" class="features">
+        <section class="how-it-works">
             <div class="container">
-                <div class="features-grid">
-                    <div class="feature-card">
-                        <div class="feature-icon">🧩</div>
-                        <h3>Standard Web Components</h3>
-                        <p>
-                            Built on Lit, these components work anywhere HTML works. React,
-                            Vue, Angular, or Vanilla JS.
-                        </p>
+                <div class="section-header">
+                    <h2>How It Works</h2>
+                </div>
+                <div class="steps-container">
+                    <div class="step">
+                        <div class="step-number">1</div>
+                        <div class="step-content">
+                            <h3>Define Your Form Schema</h3>
+                            <p>
+                                Create a form schema object defining the
+                                configuration for each question.
+                            </p>
+                            <div class="code-block">
+                                {<br />
+                                &nbsp;&nbsp;effectiveDate: {<br />
+                                &nbsp;&nbsp;&nbsp;&nbsp;<span class="token-key">label</span>:
+                                <span class="token-string">"Effective Date"</span>,<br />
+                                &nbsp;&nbsp;&nbsp;&nbsp;<span class="token-key">required</span>: <span
+                                    class="token-bool">true</span>,<br />
+                                &nbsp;&nbsp;&nbsp;&nbsp;<span class="token-key">minDate</span>:
+                                <span class="token-string">"2020-01-01"</span>,<br />
+                                &nbsp;&nbsp;&nbsp;&nbsp;<span class="token-key">maxDate</span>:
+                                <span class="token-string">"2025-12-31"</span><br />
+                                &nbsp;&nbsp;}<br />
+                                }
+                            </div>
+                        </div>
                     </div>
-                    <div class="feature-card">
-                        <div class="feature-icon">🎨</div>
-                        <h3>Headless UI</h3>
-                        <p>
-                            Zero opinionated styles. You control every pixel using standard
-                            CSS Shadow Parts.
-                        </p>
+
+                    <div class="step">
+                        <div class="step-number">2</div>
+                        <div class="step-content">
+                            <h3>Add Components to HTML</h3>
+                            <p>
+                                Use a question component and bind it to your
+                                question schema.
+                            </p>
+                            <div class="code-block">
+                                &lt;dfr-date-question<br />
+                                &nbsp;&nbsp;id=<span class="token-string">"effectiveDate"</span><br />
+                                &nbsp;&nbsp;question=<span class="token-string">"effectiveDate"</span>&gt;<br />
+                                &lt;/dfr-date-question&gt;
+                            </div>
+                        </div>
                     </div>
-                    <div class="feature-card">
-                        <div class="feature-icon">📝</div>
-                        <h3>Declarative Schema</h3>
-                        <p>
-                            Power your forms with JSON schemas. Perfect for dynamic form
-                            generation and backend-driven UIs.
-                        </p>
+
+                    <div class="step">
+                        <div class="step-number">3</div>
+                        <div class="step-content">
+                            <h3>Style with CSS Parts</h3>
+                            <p>
+                                Customize question styles using standard CSS selectors.
+                            </p>
+                            <div class="code-block">
+                                dfr-date-question::part(input) {<br />
+                                &nbsp;&nbsp;border: 2px solid #00f2ff;
+                                <span class="token-comment">/* Neon blue */</span><br />
+                                &nbsp;&nbsp;border-radius: 6px;<br />
+                                &nbsp;&nbsp;padding: 0.75rem;<br />
+                                }<br /><br />
+                                dfr-date-question::part(label) {<br />
+                                &nbsp;&nbsp;color: #ffffff;<br />
+                                &nbsp;&nbsp;font-weight: 600;<br />
+                                }
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <section id="demo" class="container">
-            <div class="demo-section">
-                <div class="demo-form">
-                    <h2 style="margin-bottom: 1.5rem">Contact Sales</h2>
-                    <form id="contactForm">
-                        <dfr-text-question id="fullName" label="Full Name" placeholder="Jane Doe" required>
-                        </dfr-text-question>
-
-                        <dfr-text-question id="email" label="Work Email" placeholder="jane@company.com" required
-                            pattern="^[^@]+@[^@]+\.[^@]+$">
-                        </dfr-text-question>
-
-                        <dfr-select-question id="companySize" label="Company Size" required>
-                        </dfr-select-question>
-
-                        <dfr-date-question id="implementationDate" label="Target Implementation Date"
-                            description="When do you want to start?" required minDate="2024-01-01">
-                        </dfr-date-question>
-
-                        <button type="submit">Submit Request</button>
-                    </form>
+        <section class="schema-showcase">
+            <div class="container">
+                <div class="section-header">
+                    <h2>Declarative Question Schemas</h2>
                 </div>
 
-                <div class="demo-code">
-                    <pre><code>&lt;!-- HTML --&gt;
-&lt;form id="contactForm"&gt;
-  &lt;dfr-text-question 
-    id="fullName" 
-    label="Full Name" 
-    required&gt;
-  &lt;/dfr-text-question&gt;
+                <div class="tabs">
+                    <button class="tab-btn active" onclick="switchTab('text')">Text Question</button>
+                    <button class="tab-btn" onclick="switchTab('date')">Date Question</button>
+                    <button class="tab-btn" onclick="switchTab('number')">Number Question</button>
+                    <button class="tab-btn" onclick="switchTab('select')">Select Question</button>
+                    <button class="tab-btn" onclick="switchTab('number-select')">Number Select</button>
+                </div>
 
-  &lt;dfr-select-question 
-    id="companySize" 
-    label="Company Size"&gt;
-  &lt;/dfr-select-question&gt;
-&lt;/form&gt;
+                <!-- Text Question -->
+                <div id="text" class="tab-content active">
+                    <div class="schema-grid">
+                        <div class="schema-details">
+                            <div class="schema-header">Schema Definition</div>
+                            <div class="code-pane">
+                                {<br />
+                                &nbsp;&nbsp;<span class="token-key">label</span>: <span class="token-string">"First
+                                    Name"</span>,<br />
+                                &nbsp;&nbsp;<span class="token-key">placeholder</span>: <span
+                                    class="token-string">"John"</span>,<br />
+                                &nbsp;&nbsp;<span class="token-key">description</span>: <span
+                                    class="token-string">"Legal first name"</span>,<br />
+                                &nbsp;&nbsp;<span class="token-key">required</span>: <span
+                                    class="token-bool">true</span>,<br />
+                                &nbsp;&nbsp;<span class="token-key">minLength</span>: <span
+                                    class="token-bool">2</span>,<br />
+                                &nbsp;&nbsp;<span class="token-key">maxLength</span>: <span
+                                    class="token-bool">50</span>,<br />
+                                &nbsp;&nbsp;<span class="token-key">pattern</span>: <span class="token-string">"^[a-zA-Z
+                                    ]+$"</span><br />
+                                }
+                            </div>
+                            <div class="schema-header" style="border-top: 1px solid var(--border)">Component Usage</div>
+                            <div class="code-pane">
+                                &lt;dfr-text-question<br />
+                                &nbsp;&nbsp;id=<span class="token-string">"firstName"</span><br />
+                                &nbsp;&nbsp;question=<span class="token-string">"formSchema.firstName"</span>&gt;<br />
+                                &lt;/dfr-text-question&gt;
+                            </div>
+                        </div>
+                        <div class="schema-details">
+                            <div class="schema-header">Requirement Format</div>
+                            <table class="req-table">
+                                <tr>
+                                    <th>Label</th>
+                                    <td>The human-readable text shown for the question</td>
+                                </tr>
+                                <tr>
+                                    <th>Description</th>
+                                    <td>Clarifies how to answer the question</td>
+                                </tr>
+                                <tr>
+                                    <th>Required</th>
+                                    <td>Indicates whether the question is required</td>
+                                </tr>
+                                <tr>
+                                    <th>Min Length</th>
+                                    <td>The minimum length of the input value</td>
+                                </tr>
+                                <tr>
+                                    <th>Max Length</th>
+                                    <td>The maximum length of the input value</td>
+                                </tr>
+                                <tr>
+                                    <th>Pattern</th>
+                                    <td>Regex pattern the input must match</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
 
-&lt;!-- JavaScript --&gt;
-&lt;script&gt;
-  const sizeSelect = document.getElementById('companySize');
-  
-  // Set options dynamically
-  sizeSelect.question = {
-    options: [
-      { label: '1-10', value: 'small' },
-      { label: '11-50', value: 'medium' },
-      { label: '50+', value: 'large' }
-    ]
-  };
+                <!-- Date Question -->
+                <div id="date" class="tab-content">
+                    <div class="schema-grid">
+                        <div class="schema-details">
+                            <div class="schema-header">Schema Definition</div>
+                            <div class="code-pane">
+                                {<br />
+                                &nbsp;&nbsp;<span class="token-key">label</span>: <span class="token-string">"Effective
+                                    Date"</span>,<br />
+                                &nbsp;&nbsp;<span class="token-key">placeholder</span>: <span
+                                    class="token-bool">null</span>,<br />
+                                &nbsp;&nbsp;<span class="token-key">description</span>: <span
+                                    class="token-string">"Policy start date"</span>,<br />
+                                &nbsp;&nbsp;<span class="token-key">required</span>: <span
+                                    class="token-bool">true</span>,<br />
+                                &nbsp;&nbsp;<span class="token-key">disabled</span>: <span
+                                    class="token-bool">false</span>,<br />
+                                &nbsp;&nbsp;<span class="token-key">minDate</span>: <span
+                                    class="token-string">"2020-01-01"</span>,<br />
+                                &nbsp;&nbsp;<span class="token-key">maxDate</span>: <span
+                                    class="token-string">"2025-12-31"</span><br />
+                                }
+                            </div>
+                            <div class="schema-header" style="border-top: 1px solid var(--border)">Component Usage</div>
+                            <div class="code-pane">
+                                &lt;dfr-date-question<br />
+                                &nbsp;&nbsp;id=<span class="token-string">"effectiveDate"</span><br />
+                                &nbsp;&nbsp;question=<span
+                                    class="token-string">"formSchema.effectiveDate"</span>&gt;<br />
+                                &lt;/dfr-date-question&gt;
+                            </div>
+                        </div>
+                        <div class="schema-details">
+                            <div class="schema-header">Requirement Format</div>
+                            <table class="req-table">
+                                <tr>
+                                    <th>Label</th>
+                                    <td>The human-readable text shown for the question</td>
+                                </tr>
+                                <tr>
+                                    <th>Placeholder</th>
+                                    <td>The placeholder text shown in the input field</td>
+                                </tr>
+                                <tr>
+                                    <th>Description</th>
+                                    <td>Clarifies how to answer the question</td>
+                                </tr>
+                                <tr>
+                                    <th>Required</th>
+                                    <td>Indicates whether the question is required</td>
+                                </tr>
+                                <tr>
+                                    <th>Disabled</th>
+                                    <td>Indicates whether the question is disabled</td>
+                                </tr>
+                                <tr>
+                                    <th>Min Date</th>
+                                    <td>Earliest date accepted (YYYY-MM-DD)</td>
+                                </tr>
+                                <tr>
+                                    <th>Max Date</th>
+                                    <td>Latest date accepted (YYYY-MM-DD)</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
 
-  // Listen for changes
-  document.addEventListener('value-changed', (e) => {
-    console.log(e.detail.value);
-  });
-&lt;/script&gt;</code></pre>
+                <!-- Number Question -->
+                <div id="number" class="tab-content">
+                    <div class="schema-grid">
+                        <div class="schema-details">
+                            <div class="schema-header">Schema Definition</div>
+                            <div class="code-pane">
+                                {<br />
+                                &nbsp;&nbsp;<span class="token-key">label</span>: <span class="token-string">"Square
+                                    Footage"</span>,<br />
+                                &nbsp;&nbsp;<span class="token-key">placeholder</span>: <span
+                                    class="token-bool">null</span>,<br />
+                                &nbsp;&nbsp;<span class="token-key">description</span>: <span
+                                    class="token-string">"Exclude basement"</span>,<br />
+                                &nbsp;&nbsp;<span class="token-key">required</span>: <span
+                                    class="token-bool">true</span>,<br />
+                                &nbsp;&nbsp;<span class="token-key">disabled</span>: <span
+                                    class="token-bool">false</span>,<br />
+                                &nbsp;&nbsp;<span class="token-key">min</span>: <span
+                                    class="token-bool">100</span>,<br />
+                                &nbsp;&nbsp;<span class="token-key">max</span>: <span
+                                    class="token-bool">10000</span><br />
+                                }
+                            </div>
+                            <div class="schema-header" style="border-top: 1px solid var(--border)">Component Usage</div>
+                            <div class="code-pane">
+                                &lt;dfr-number-question<br />
+                                &nbsp;&nbsp;id=<span class="token-string">"squareFootage"</span><br />
+                                &nbsp;&nbsp;question=<span
+                                    class="token-string">"formSchema.squareFootage"</span>&gt;<br />
+                                &lt;/dfr-number-question&gt;
+                            </div>
+                        </div>
+                        <div class="schema-details">
+                            <div class="schema-header">Requirement Format</div>
+                            <table class="req-table">
+                                <tr>
+                                    <th>Label</th>
+                                    <td>The human-readable text shown for the question</td>
+                                </tr>
+                                <tr>
+                                    <th>Placeholder</th>
+                                    <td>The placeholder text shown in the input field</td>
+                                </tr>
+                                <tr>
+                                    <th>Description</th>
+                                    <td>Clarifies how to answer the question</td>
+                                </tr>
+                                <tr>
+                                    <th>Required</th>
+                                    <td>Indicates whether the question is required</td>
+                                </tr>
+                                <tr>
+                                    <th>Disabled</th>
+                                    <td>Indicates whether the question is disabled</td>
+                                </tr>
+                                <tr>
+                                    <th>Min</th>
+                                    <td>The minimum number value allowed</td>
+                                </tr>
+                                <tr>
+                                    <th>Max</th>
+                                    <td>The maximum number value allowed</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Select Question -->
+                <div id="select" class="tab-content">
+                    <div class="schema-grid">
+                        <div class="schema-details">
+                            <div class="schema-header">Schema Definition</div>
+                            <div class="code-pane">
+                                {<br />
+                                &nbsp;&nbsp;<span class="token-key">label</span>: <span class="token-string">"Insurance
+                                    Status"</span>,<br />
+                                &nbsp;&nbsp;<span class="token-key">placeholder</span>: <span
+                                    class="token-bool">null</span>,<br />
+                                &nbsp;&nbsp;<span class="token-key">description</span>: <span
+                                    class="token-bool">null</span>,<br />
+                                &nbsp;&nbsp;<span class="token-key">required</span>: <span
+                                    class="token-bool">true</span>,<br />
+                                &nbsp;&nbsp;<span class="token-key">disabled</span>: <span
+                                    class="token-bool">false</span>,<br />
+                                &nbsp;&nbsp;<span class="token-key">options</span>: [<br />
+                                &nbsp;&nbsp;&nbsp;&nbsp;{<br />
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="token-key">label</span>: <span
+                                    class="token-string">"Insured"</span>,<br />
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="token-key">value</span>: <span
+                                    class="token-string">"insured"</span><br />
+                                &nbsp;&nbsp;&nbsp;&nbsp;},<br />
+                                &nbsp;&nbsp;&nbsp;&nbsp;{<br />
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="token-key">label</span>: <span
+                                    class="token-string">"Uninsured"</span>,<br />
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="token-key">value</span>: <span
+                                    class="token-string">"uninsured"</span><br />
+                                &nbsp;&nbsp;&nbsp;&nbsp;}<br />
+                                &nbsp;&nbsp;]<br />
+                                }
+                            </div>
+                            <div class="schema-header" style="border-top: 1px solid var(--border)">Component Usage</div>
+                            <div class="code-pane">
+                                &lt;dfr-select-question<br />
+                                &nbsp;&nbsp;id=<span class="token-string">"status"</span><br />
+                                &nbsp;&nbsp;question=<span class="token-string">"formSchema.status"</span>&gt;<br />
+                                &lt;/dfr-select-question&gt;
+                            </div>
+                        </div>
+                        <div class="schema-details">
+                            <div class="schema-header">Requirement Format</div>
+                            <table class="req-table">
+                                <tr>
+                                    <th>Label</th>
+                                    <td>The human-readable text shown for the question</td>
+                                </tr>
+                                <tr>
+                                    <th>Placeholder</th>
+                                    <td>The placeholder text shown in the input field</td>
+                                </tr>
+                                <tr>
+                                    <th>Description</th>
+                                    <td>Clarifies how to answer the question</td>
+                                </tr>
+                                <tr>
+                                    <th>Required</th>
+                                    <td>Indicates whether the question is required</td>
+                                </tr>
+                                <tr>
+                                    <th>Disabled</th>
+                                    <td>Indicates whether the question is disabled</td>
+                                </tr>
+                                <tr>
+                                    <th>Options</th>
+                                    <td>List of options user can select from</td>
+                                </tr>
+                                <tr>
+                                    <th>Option Label</th>
+                                    <td>Display text for an option</td>
+                                </tr>
+                                <tr>
+                                    <th>Option Value</th>
+                                    <td>Underlying value for an option</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Number Select Question -->
+                <div id="number-select" class="tab-content">
+                    <div class="schema-grid">
+                        <div class="schema-details">
+                            <div class="schema-header">Schema Definition</div>
+                            <div class="code-pane">
+                                {<br />
+                                &nbsp;&nbsp;<span class="token-key">label</span>: <span
+                                    class="token-string">"Rating"</span>,<br />
+                                &nbsp;&nbsp;<span class="token-key">placeholder</span>: <span
+                                    class="token-bool">null</span>,<br />
+                                &nbsp;&nbsp;<span class="token-key">description</span>: <span
+                                    class="token-bool">null</span>,<br />
+                                &nbsp;&nbsp;<span class="token-key">required</span>: <span
+                                    class="token-bool">true</span>,<br />
+                                &nbsp;&nbsp;<span class="token-key">disabled</span>: <span
+                                    class="token-bool">false</span>,<br />
+                                &nbsp;&nbsp;<span class="token-key">options</span>: [<span class="token-bool">1</span>,
+                                <span class="token-bool">2</span>, <span class="token-bool">3</span>, <span
+                                    class="token-bool">4</span>, <span class="token-bool">5</span>]<br />
+                                }
+                            </div>
+                            <div class="schema-header" style="border-top: 1px solid var(--border)">Component Usage</div>
+                            <div class="code-pane">
+                                &lt;dfr-number-select-question<br />
+                                &nbsp;&nbsp;id=<span class="token-string">"rating"</span><br />
+                                &nbsp;&nbsp;question=<span class="token-string">"formSchema.rating"</span>&gt;<br />
+                                &lt;/dfr-number-select-question&gt;
+                            </div>
+                        </div>
+                        <div class="schema-details">
+                            <div class="schema-header">Requirement Format</div>
+                            <table class="req-table">
+                                <tr>
+                                    <th>Label</th>
+                                    <td>The human-readable text shown for the question</td>
+                                </tr>
+                                <tr>
+                                    <th>Placeholder</th>
+                                    <td>The placeholder text shown in the input field</td>
+                                </tr>
+                                <tr>
+                                    <th>Description</th>
+                                    <td>Clarifies how to answer the question</td>
+                                </tr>
+                                <tr>
+                                    <th>Required</th>
+                                    <td>Indicates whether the question is required</td>
+                                </tr>
+                                <tr>
+                                    <th>Disabled</th>
+                                    <td>Indicates whether the question is disabled</td>
+                                </tr>
+                                <tr>
+                                    <th>Options</th>
+                                    <td>List of number options to select from</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <script>
+            function switchTab(tabId) {
+                // Hide all contents
+                document.querySelectorAll('.tab-content').forEach(content => {
+                    content.classList.remove('active');
+                });
+
+                // Deactivate all buttons
+                document.querySelectorAll('.tab-btn').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+
+                // Activate selected
+                document.getElementById(tabId).classList.add('active');
+                event.target.classList.add('active');
+            }
+        </script>
+
+        <section id="get-started" class="footer-cta">
+            <div class="container">
+                <h2>Stop fighting with forms. Start declaring them.</h2>
+                <p>
+                    Decrease implementation time for complex forms by over
+                    70%.
+                </p>
+                <div class="install-cmd">
+                    <span>$</span> npm i declarative-form-rendering
+                </div>
+                <div class="footer-links">
+                    <a href="USAGE.md">Read the Docs</a>
+                    <a href="https://github.com/heyshadowsmith/declarative-form-rendering">View on GitHub</a>
                 </div>
             </div>
         </section>
@@ -395,33 +1222,12 @@
 
     <footer>
         <div class="container">
-            <p>&copy; 2024 Declarative Form Rendering. MIT License.</p>
+            <p>
+                &copy; 2024 Declarative Form Rendering. Released under the
+                MIT License.
+            </p>
         </div>
     </footer>
-
-    <script>
-        // Initialize the select options
-        document.addEventListener("DOMContentLoaded", () => {
-            const companySize = document.getElementById("companySize");
-            companySize.question = {
-                options: [
-                    { label: "1-10 Employees", value: "1-10" },
-                    { label: "11-50 Employees", value: "11-50" },
-                    { label: "51-200 Employees", value: "51-200" },
-                    { label: "201+ Employees", value: "201+" },
-                ],
-            };
-
-            // Handle form submission
-            const form = document.getElementById("contactForm");
-            form.addEventListener("submit", (e) => {
-                e.preventDefault();
-                const formData = new FormData(form);
-                const data = Object.fromEntries(formData.entries());
-                alert("Form Submitted!\n\n" + JSON.stringify(data, null, 2));
-            });
-        });
-    </script>
 </body>
 
 </html>

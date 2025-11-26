@@ -30,7 +30,8 @@
         "test": "vitest run",
         "test:watch": "vitest run --watch",
         "storybook": "storybook dev -p 6006",
-        "build-storybook": "storybook build"
+        "build-storybook": "storybook build",
+        "build:docs": "vite build --config vite.site.config.ts && storybook build -o dist-docs/storybook"
     },
     "devDependencies": {
         "@storybook/addon-vitest": "^10.0.8",
