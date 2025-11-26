@@ -8,8 +8,13 @@ const config = {
 
   addons: ["@storybook/addon-vitest"],
 
+  managerHead: (head) => `
+    ${head}
+    <base href="/storybook/">
+  `,
+
   async viteFinal(config) {
-    config.base = "./";
+    config.base = "/storybook/";
     return config;
   },
 };
