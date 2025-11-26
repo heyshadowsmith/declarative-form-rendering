@@ -7,5 +7,10 @@ const config = {
   },
 
   addons: ["@storybook/addon-vitest"],
+
+  async viteFinal(config) {
+    config.base = "./";
+    return config;
+  },
 };
 export default config;
