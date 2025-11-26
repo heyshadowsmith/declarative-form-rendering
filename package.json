@@ -1,0 +1,52 @@
+{
+    "type": "module",
+    "name": "declarative-form-rendering",
+    "version": "0.0.1",
+    "description": "A headless web component library for building forms declaratively.",
+    "author": "heyshadowsmith",
+    "license": "MIT",
+    "keywords": [
+        "web-components",
+        "lit",
+        "forms",
+        "declarative",
+        "headless"
+    ],
+    "main": "./dist/components.umd.cjs",
+    "module": "./dist/components.js",
+    "types": "./dist/src/all-questions.d.ts",
+    "exports": {
+        ".": {
+            "import": "./dist/components.js",
+            "require": "./dist/components.umd.cjs"
+        }
+    },
+    "files": [
+        "dist"
+    ],
+    "scripts": {
+        "build": "vite build && tsc",
+        "dev": "vite",
+        "test": "vitest run",
+        "test:watch": "vitest run --watch",
+        "storybook": "storybook dev -p 6006",
+        "build-storybook": "storybook build"
+    },
+    "devDependencies": {
+        "@storybook/addon-vitest": "^10.0.8",
+        "@storybook/html": "^10.0.8",
+        "@storybook/web-components-vite": "^10.0.8",
+        "@types/node": "^24.10.1",
+        "@vitest/browser-playwright": "4.0.14",
+        "@vitest/coverage-v8": "4.0.14",
+        "@vitest/runner": "^4.0.14",
+        "playwright": "^1.57.0",
+        "storybook": "^10.0.8",
+        "typescript": "^5.9.3",
+        "vite": "^7.2.4",
+        "vitest": "^4.0.14"
+    },
+    "dependencies": {
+        "lit": "^3.3.1"
+    }
+}

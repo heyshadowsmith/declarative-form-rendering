@@ -1,0 +1,427 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Declarative Form Rendering</title>
+    <script type="module" src="./src/all-questions.ts"></script>
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --secondary: #ec4899;
+            --text: #1f2937;
+            --text-light: #6b7280;
+            --bg: #f9fafb;
+            --white: #ffffff;
+            --code-bg: #1e1e1e;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family:
+                "Inter",
+                system-ui,
+                -apple-system,
+                sans-serif;
+            color: var(--text);
+            background: var(--bg);
+            line-height: 1.5;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        /* Header */
+        header {
+            background: var(--white);
+            border-bottom: 1px solid #e5e7eb;
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-weight: 800;
+            font-size: 1.5rem;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-links a {
+            color: var(--text-light);
+            text-decoration: none;
+            margin-left: 2rem;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+
+        /* Hero */
+        .hero {
+            padding: 6rem 0;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            line-height: 1.1;
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            color: var(--text-light);
+            max-width: 600px;
+            margin: 0 auto 2.5rem;
+        }
+
+        .btn {
+            display: inline-block;
+            background: var(--primary);
+            color: var(--white);
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            text-decoration: none;
+            font-weight: 600;
+            transition: background 0.2s;
+        }
+
+        .btn:hover {
+            background: var(--primary-dark);
+        }
+
+        .btn-secondary {
+            background: var(--white);
+            color: var(--text);
+            border: 1px solid #e5e7eb;
+            margin-left: 1rem;
+        }
+
+        .btn-secondary:hover {
+            background: #f3f4f6;
+        }
+
+        /* Features */
+        .features {
+            padding: 4rem 0;
+            background: var(--white);
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .feature-card {
+            padding: 2rem;
+            border-radius: 1rem;
+            background: var(--bg);
+            border: 1px solid #e5e7eb;
+        }
+
+        .feature-icon {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .feature-card h3 {
+            margin-bottom: 0.5rem;
+            font-size: 1.25rem;
+        }
+
+        .feature-card p {
+            color: var(--text-light);
+        }
+
+        /* Demo Section */
+        .demo-section {
+            padding: 4rem 0;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: start;
+        }
+
+        .demo-form {
+            background: var(--white);
+            padding: 2rem;
+            border-radius: 1rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .demo-code {
+            background: var(--code-bg);
+            color: #e5e7eb;
+            padding: 1.5rem;
+            border-radius: 1rem;
+            overflow-x: auto;
+            font-family: "Fira Code", monospace;
+            font-size: 0.875rem;
+        }
+
+        /* Component Styling (Headless Demo) */
+        dfr-text-question,
+        dfr-number-question,
+        dfr-select-question,
+        dfr-date-question {
+            display: block;
+            margin-bottom: 1.5rem;
+        }
+
+        dfr-text-question::part(label),
+        dfr-number-question::part(label),
+        dfr-select-question::part(label),
+        dfr-date-question::part(label) {
+            display: block;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            color: var(--text);
+        }
+
+        dfr-text-question::part(input),
+        dfr-number-question::part(input),
+        dfr-select-question::part(input),
+        dfr-date-question::part(input) {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #d1d5db;
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            transition: border-color 0.2s;
+        }
+
+        dfr-text-question::part(input):focus,
+        dfr-number-question::part(input):focus,
+        dfr-select-question::part(input):focus,
+        dfr-date-question::part(input):focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+        }
+
+        dfr-text-question::part(description),
+        dfr-number-question::part(description),
+        dfr-select-question::part(description),
+        dfr-date-question::part(description) {
+            font-size: 0.875rem;
+            color: var(--text-light);
+            margin-bottom: 0.25rem;
+            display: block;
+        }
+
+        dfr-text-question::part(error),
+        dfr-number-question::part(error),
+        dfr-select-question::part(error),
+        dfr-date-question::part(error) {
+            color: #ef4444;
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+            display: block;
+        }
+
+        button[type="submit"] {
+            width: 100%;
+            background: var(--primary);
+            color: white;
+            padding: 0.75rem;
+            border: none;
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        button[type="submit"]:hover {
+            background: var(--primary-dark);
+        }
+
+        /* Footer */
+        footer {
+            background: var(--white);
+            border-top: 1px solid #e5e7eb;
+            padding: 2rem 0;
+            text-align: center;
+            color: var(--text-light);
+            margin-top: 4rem;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="container">
+            <nav>
+                <div class="logo">DFR</div>
+                <div class="nav-links">
+                    <a href="#features">Features</a>
+                    <a href="#demo">Demo</a>
+                    <a href="https://github.com/heyshadowsmith/declarative-form-rendering" target="_blank">GitHub</a>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div class="container">
+                <h1>Declarative Form Rendering</h1>
+                <p>
+                    Build complex, type-safe forms with standard Web Components.
+                    Headless, lightweight, and framework-agnostic.
+                </p>
+                <div>
+                    <a href="#demo" class="btn">Try the Demo</a>
+                    <a href="https://github.com/heyshadowsmith/declarative-form-rendering"
+                        class="btn btn-secondary">View on GitHub</a>
+                </div>
+            </div>
+        </section>
+
+        <section id="features" class="features">
+            <div class="container">
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">🧩</div>
+                        <h3>Standard Web Components</h3>
+                        <p>
+                            Built on Lit, these components work anywhere HTML works. React,
+                            Vue, Angular, or Vanilla JS.
+                        </p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🎨</div>
+                        <h3>Headless UI</h3>
+                        <p>
+                            Zero opinionated styles. You control every pixel using standard
+                            CSS Shadow Parts.
+                        </p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">📝</div>
+                        <h3>Declarative Schema</h3>
+                        <p>
+                            Power your forms with JSON schemas. Perfect for dynamic form
+                            generation and backend-driven UIs.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="demo" class="container">
+            <div class="demo-section">
+                <div class="demo-form">
+                    <h2 style="margin-bottom: 1.5rem">Contact Sales</h2>
+                    <form id="contactForm">
+                        <dfr-text-question id="fullName" label="Full Name" placeholder="Jane Doe" required>
+                        </dfr-text-question>
+
+                        <dfr-text-question id="email" label="Work Email" placeholder="jane@company.com" required
+                            pattern="^[^@]+@[^@]+\.[^@]+$">
+                        </dfr-text-question>
+
+                        <dfr-select-question id="companySize" label="Company Size" required>
+                        </dfr-select-question>
+
+                        <dfr-date-question id="implementationDate" label="Target Implementation Date"
+                            description="When do you want to start?" required minDate="2024-01-01">
+                        </dfr-date-question>
+
+                        <button type="submit">Submit Request</button>
+                    </form>
+                </div>
+
+                <div class="demo-code">
+                    <pre><code>&lt;!-- HTML --&gt;
+&lt;form id="contactForm"&gt;
+  &lt;dfr-text-question 
+    id="fullName" 
+    label="Full Name" 
+    required&gt;
+  &lt;/dfr-text-question&gt;
+
+  &lt;dfr-select-question 
+    id="companySize" 
+    label="Company Size"&gt;
+  &lt;/dfr-select-question&gt;
+&lt;/form&gt;
+
+&lt;!-- JavaScript --&gt;
+&lt;script&gt;
+  const sizeSelect = document.getElementById('companySize');
+  
+  // Set options dynamically
+  sizeSelect.question = {
+    options: [
+      { label: '1-10', value: 'small' },
+      { label: '11-50', value: 'medium' },
+      { label: '50+', value: 'large' }
+    ]
+  };
+
+  // Listen for changes
+  document.addEventListener('value-changed', (e) => {
+    console.log(e.detail.value);
+  });
+&lt;/script&gt;</code></pre>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 Declarative Form Rendering. MIT License.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Initialize the select options
+        document.addEventListener("DOMContentLoaded", () => {
+            const companySize = document.getElementById("companySize");
+            companySize.question = {
+                options: [
+                    { label: "1-10 Employees", value: "1-10" },
+                    { label: "11-50 Employees", value: "11-50" },
+                    { label: "51-200 Employees", value: "51-200" },
+                    { label: "201+ Employees", value: "201+" },
+                ],
+            };
+
+            // Handle form submission
+            const form = document.getElementById("contactForm");
+            form.addEventListener("submit", (e) => {
+                e.preventDefault();
+                const formData = new FormData(form);
+                const data = Object.fromEntries(formData.entries());
+                alert("Form Submitted!\n\n" + JSON.stringify(data, null, 2));
+            });
+        });
+    </script>
+</body>
+
+</html>
